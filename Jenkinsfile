@@ -60,13 +60,21 @@ pipeline {
                 }
             }
         }
-          stage ('Deploy Prod') {
-                    steps {
-                    bat 'docker-compose build'
-                    bat 'docker-compose up -d'
+                stage ('Deploy Prod') {
+                            steps {
+                            bat 'docker-compose build'
+                            bat 'docker-compose up -d'
+                    }
+                }
+                stage ('Health-Check') {
+                            steps {
+                                sleep(10)
+                                dir('functional-test') {
+                                    bat 'mvn verify -Dskip.surefire.tests'
+                        }
+                    }
+                }
             }
         }
-    }
-}
 
 
